@@ -126,14 +126,50 @@ export default function Page() {
   async function generatePDF() {
     setGenerating(true);
     try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
       const jsPDF = (await import("jspdf")).default;
-      await import("jspdf-autotable" as any);
 
-      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" }) as InstanceType<typeof jsPDF> & JsPDFWithAutoTable;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" }) as any;
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
       const margin = 20;
+
+      // Helper: draw a simple table without autotable
+      function drawTable(startY: number, title: string, titleColor: [number,number,number], rows: [string,string][]) {
+        let y = startY;
+        const colW = (pageWidth - margin * 2);
+        const labelW = 55;
+
+        // Header
+        doc.setFillColor(...titleColor);
+        doc.rect(margin, y, colW, 8, "F");
+        doc.setTextColor(255,255,255);
+        doc.setFontSize(9);
+        doc.setFont("helvetica","bold");
+        doc.text(title, margin + 3, y + 5.5);
+        y += 8;
+
+        // Rows
+        for (let i = 0; i < rows.length; i++) {
+          if (y > pageHeight - 20) { doc.addPage(); y = 20; }
+          const bg = i % 2 === 0 ? [245,248,252] : [255,255,255];
+          doc.setFillColor(bg[0],bg[1],bg[2]);
+          doc.rect(margin, y, colW, 7, "F");
+          doc.setDrawColor(220,220,220);
+          doc.rect(margin, y, colW, 7, "S");
+
+          doc.setTextColor(27,79,114);
+          doc.setFontSize(8);
+          doc.setFont("helvetica","bold");
+          doc.text(rows[i][0], margin + 2, y + 5);
+
+          doc.setTextColor(50,50,50);
+          doc.setFont("helvetica","normal");
+          doc.text(rows[i][1], margin + labelW, y + 5);
+          y += 7;
+        }
+        return y + 4;
+      }
 
       /* ========================
          PAGE 1 : COVER
@@ -201,135 +237,60 @@ export default function Page() {
 
       let currentY = 28;
 
-      // Apprenant section
-      doc.autoTable({
-        startY: currentY,
-        head: [["APPRENANT(E)", ""]],
-        body: [
-          ["Nom", v("nom") || "-"],
-          ["Prenom", v("prenom") || "-"],
-          ["Date de naissance", v("date_naissance") || "-"],
-          ["Adresse", v("adresse") || "-"],
-          ["Telephone", v("telephone") || "-"],
-          ["E-mail", v("email") || "-"],
-          ["Formation preparee", v("formation") || "-"],
-          ["Diplome / Titre vise", v("diplome") || "-"],
-        ],
-        theme: "grid",
-        headStyles: { fillColor: PRIMARY, textColor: 255, fontStyle: "bold", fontSize: 10 },
-        bodyStyles: { fontSize: 9, cellPadding: 3 },
-        alternateRowStyles: { fillColor: LIGHT_BG },
-        columnStyles: { 0: { fontStyle: "bold", fillColor: [245, 245, 245] } as Partial<AutoTableStyles> },
-        styles: { halign: "left" },
-        margin: { left: margin, right: margin },
-      });
-      currentY = doc.lastAutoTable.finalY + 6;
+      currentY = drawTable(currentY, "APPRENANT(E)", PRIMARY, [
+        ["Nom", v("nom") || "-"],
+        ["Prenom", v("prenom") || "-"],
+        ["Date de naissance", v("date_naissance") || "-"],
+        ["Adresse", v("adresse") || "-"],
+        ["Telephone", v("telephone") || "-"],
+        ["E-mail", v("email") || "-"],
+        ["Formation", v("formation") || "-"],
+        ["Diplome / Titre", v("diplome") || "-"],
+      ]);
 
-      // Urgence section
-      doc.autoTable({
-        startY: currentY,
-        head: [["EN CAS D'URGENCE", ""]],
-        body: [
-          ["Personne a contacter", v("urgence_contact") || "-"],
-          ["Telephone 1", v("urgence_tel1") || "-"],
-          ["Telephone 2", v("urgence_tel2") || "-"],
-          ["Informations medicales", v("urgence_medical") || "-"],
-        ],
-        theme: "grid",
-        headStyles: { fillColor: RED, textColor: 255, fontStyle: "bold", fontSize: 10 },
-        bodyStyles: { fontSize: 9, cellPadding: 3 },
-        alternateRowStyles: { fillColor: [253, 237, 236] },
-        columnStyles: { 0: { fontStyle: "bold", fillColor: [245, 245, 245] } as Partial<AutoTableStyles> },
-        styles: { halign: "left" },
-        margin: { left: margin, right: margin },
-      });
-      currentY = doc.lastAutoTable.finalY + 6;
+      currentY = drawTable(currentY, "EN CAS D'URGENCE", RED, [
+        ["Contact", v("urgence_contact") || "-"],
+        ["Telephone 1", v("urgence_tel1") || "-"],
+        ["Telephone 2", v("urgence_tel2") || "-"],
+        ["Infos medicales", v("urgence_medical") || "-"],
+      ]);
 
-      // Entreprise section
-      doc.autoTable({
-        startY: currentY,
-        head: [["ENTREPRISE D'ACCUEIL", ""]],
-        body: [
-          ["Raison sociale", v("entreprise_nom") || "-"],
-          ["Adresse", v("entreprise_adresse") || "-"],
-          ["Telephone", v("entreprise_tel") || "-"],
-          ["E-mail", v("entreprise_email") || "-"],
-          ["Activite / Secteur", v("entreprise_activite") || "-"],
-          ["Debut du contrat", v("entreprise_debut") || "-"],
-          ["Fin du contrat", v("entreprise_fin") || "-"],
-        ],
-        theme: "grid",
-        headStyles: { fillColor: SECONDARY, textColor: 255, fontStyle: "bold", fontSize: 10 },
-        bodyStyles: { fontSize: 9, cellPadding: 3 },
-        alternateRowStyles: { fillColor: LIGHT_BG },
-        columnStyles: { 0: { fontStyle: "bold", fillColor: [245, 245, 245] } as Partial<AutoTableStyles> },
-        styles: { halign: "left" },
-        margin: { left: margin, right: margin },
-      });
-      currentY = doc.lastAutoTable.finalY + 6;
+      if (currentY > pageHeight - 60) { doc.addPage(); currentY = 20; }
 
-      // Check if we need a new page
-      if (currentY > pageHeight - 80) {
-        doc.addPage();
-        currentY = 20;
-      }
+      currentY = drawTable(currentY, "ENTREPRISE D'ACCUEIL", SECONDARY, [
+        ["Raison sociale", v("entreprise_nom") || "-"],
+        ["Adresse", v("entreprise_adresse") || "-"],
+        ["Telephone", v("entreprise_tel") || "-"],
+        ["E-mail", v("entreprise_email") || "-"],
+        ["Activite", v("entreprise_activite") || "-"],
+        ["Debut contrat", v("entreprise_debut") || "-"],
+        ["Fin contrat", v("entreprise_fin") || "-"],
+      ]);
 
-      // Tuteur section
-      doc.autoTable({
-        startY: currentY,
-        head: [["MAITRE D'APPRENTISSAGE / TUTEUR", ""]],
-        body: [
-          ["Nom", v("ma_nom") || "-"],
-          ["Prenom", v("ma_prenom") || "-"],
-          ["Poste occupe", v("ma_poste") || "-"],
-          ["Telephone", v("ma_tel") || "-"],
-          ["E-mail", v("ma_email") || "-"],
-        ],
-        theme: "grid",
-        headStyles: { fillColor: ACCENT, textColor: 255, fontStyle: "bold", fontSize: 10 },
-        bodyStyles: { fontSize: 9, cellPadding: 3 },
-        alternateRowStyles: { fillColor: [255, 249, 219] },
-        columnStyles: { 0: { fontStyle: "bold", fillColor: [245, 245, 245] } as Partial<AutoTableStyles> },
-        styles: { halign: "left" },
-        margin: { left: margin, right: margin },
-      });
-      currentY = doc.lastAutoTable.finalY + 6;
+      if (currentY > pageHeight - 50) { doc.addPage(); currentY = 20; }
+
+      currentY = drawTable(currentY, "MAITRE D'APPRENTISSAGE / TUTEUR", ACCENT, [
+        ["Nom", v("ma_nom") || "-"],
+        ["Prenom", v("ma_prenom") || "-"],
+        ["Poste", v("ma_poste") || "-"],
+        ["Telephone", v("ma_tel") || "-"],
+        ["E-mail", v("ma_email") || "-"],
+      ]);
 
       // Responsables legaux
       if (v("resp1_nom") || v("resp2_nom")) {
-        if (currentY > pageHeight - 80) {
-          doc.addPage();
-          currentY = 20;
-        }
-
-        const respBody: string[][] = [];
-        if (v("resp1_nom") || v("resp1_prenom")) {
-          respBody.push(["Responsable 1 - Nom", `${v("resp1_nom")} ${v("resp1_prenom")}`.trim() || "-"]);
-          if (v("resp1_adresse")) respBody.push(["Adresse", v("resp1_adresse")]);
-          if (v("resp1_tel")) respBody.push(["Telephone", v("resp1_tel")]);
-          if (v("resp1_email")) respBody.push(["E-mail", v("resp1_email")]);
-        }
-        if (v("resp2_nom") || v("resp2_prenom")) {
-          respBody.push(["Responsable 2 - Nom", `${v("resp2_nom")} ${v("resp2_prenom")}`.trim() || "-"]);
-          if (v("resp2_adresse")) respBody.push(["Adresse", v("resp2_adresse")]);
-          if (v("resp2_tel")) respBody.push(["Telephone", v("resp2_tel")]);
-          if (v("resp2_email")) respBody.push(["E-mail", v("resp2_email")]);
-        }
-
-        if (respBody.length > 0) {
-          doc.autoTable({
-            startY: currentY,
-            head: [["RESPONSABLE(S) LEGAL(AUX)", ""]],
-            body: respBody,
-            theme: "grid",
-            headStyles: { fillColor: PRIMARY, textColor: 255, fontStyle: "bold", fontSize: 10 },
-            bodyStyles: { fontSize: 9, cellPadding: 3 },
-            alternateRowStyles: { fillColor: LIGHT_BG },
-            columnStyles: { 0: { fontStyle: "bold", fillColor: [245, 245, 245] } as Partial<AutoTableStyles> },
-            styles: { halign: "left" },
-            margin: { left: margin, right: margin },
-          });
-          currentY = doc.lastAutoTable.finalY + 6;
+        if (currentY > pageHeight - 50) { doc.addPage(); currentY = 20; }
+        const respRows: [string,string][] = [];
+        if (v("resp1_nom")) { respRows.push(["Resp. 1 Nom", v("resp1_nom")]); }
+        if (v("resp1_prenom")) { respRows.push(["Resp. 1 Prenom", v("resp1_prenom")]); }
+        if (v("resp1_tel")) { respRows.push(["Resp. 1 Tel", v("resp1_tel")]); }
+        if (v("resp1_email")) { respRows.push(["Resp. 1 Email", v("resp1_email")]); }
+        if (v("resp2_nom")) { respRows.push(["Resp. 2 Nom", v("resp2_nom")]); }
+        if (v("resp2_prenom")) { respRows.push(["Resp. 2 Prenom", v("resp2_prenom")]); }
+        if (v("resp2_tel")) { respRows.push(["Resp. 2 Tel", v("resp2_tel")]); }
+        if (v("resp2_email")) { respRows.push(["Resp. 2 Email", v("resp2_email")]); }
+        if (respRows.length > 0) {
+          currentY = drawTable(currentY, "RESPONSABLE(S) LEGAL(AUX)", PRIMARY, respRows);
         }
       }
 
