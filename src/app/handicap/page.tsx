@@ -1,8 +1,25 @@
-import { PageSection, SectionBanner, InfoCard, FieldRow, AlertBox } from "@/components/ui";
+"use client";
+import { useStudent } from "@/lib/StudentContext";
+import { PageSection, SectionBanner, InfoCard, AlertBox } from "@/components/ui";
+import SaveBar from "@/components/SaveBar";
+
+function Field({ label, name, data, update }: { label: string; name: string; data: Record<string, unknown>; update: (n: string, v: string) => void }) {
+  return (
+    <div className="py-1.5">
+      <label className="block text-xs font-bold text-primary mb-1">{label} :</label>
+      <input type="text" value={(data[name] as string) || ""} onChange={(e) => update(name, e.target.value)}
+        className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" />
+    </div>
+  );
+}
 
 export default function Page() {
+  const { data, loading, update } = useStudent();
+
+  if (loading) return <PageSection num={8} title="Accessibilite et handicap"><p className="text-sm text-gray-500 text-center py-8">Chargement...</p></PageSection>;
+
   return (
-    <PageSection num={8} title="Accompagnement handicap">
+    <PageSection num={8} title="Accessibilite et handicap">
       <p className="text-dark text-sm">
         Le CFA s&apos;engage a accueillir et accompagner les personnes en situation de handicap
         tout au long de leur parcours de formation, conformement a la loi du 11 fevrier 2005.
@@ -11,7 +28,7 @@ export default function Page() {
       <SectionBanner title="DISPOSITIFS D'ACCOMPAGNEMENT" color="bg-primary" />
       <InfoCard color="border-primary">
         <ul className="list-disc list-inside text-sm text-dark space-y-1">
-          <li>Entretien individuel pour identifier les besoins specifiques de l&apos;apprenant(e)</li>
+          <li>Entretien individuel pour identifier les besoins specifiques</li>
           <li>Amenagement des conditions d&apos;examen (tiers-temps, secretaire, materiel adapte)</li>
           <li>Adaptation des supports pedagogiques et des modalites d&apos;evaluation</li>
           <li>Accessibilite des locaux et des equipements de formation</li>
@@ -24,18 +41,20 @@ export default function Page() {
 
       <AlertBox bg="bg-light" textColor="text-primary">
         N&apos;hesitez pas a vous signaler aupres du referent handicap des le debut de votre formation.
-        Toutes les informations communiquees restent strictement confidentielles et ne sont utilisees
-        que dans le but de faciliter votre parcours.
+        Toutes les informations communiquees restent strictement confidentielles.
       </AlertBox>
 
       <SectionBanner title="REFERENT HANDICAP DU CFA" color="bg-secondary" />
       <div className="border border-gray-200 border-t-0 p-4">
-        <FieldRow label="Nom et prenom" className="bg-light px-2" />
-        <FieldRow label="Fonction" />
-        <FieldRow label="Telephone" className="bg-light px-2" />
-        <FieldRow label="E-mail" />
-        <FieldRow label="Jours et horaires de disponibilite" className="bg-light px-2" />
+        <Field label="Nom et prenom" name="handicap_referent_nom" data={data} update={update} />
+        <Field label="Fonction" name="handicap_referent_fonction" data={data} update={update} />
+        <Field label="Telephone" name="handicap_referent_tel" data={data} update={update} />
+        <Field label="E-mail" name="handicap_referent_email" data={data} update={update} />
+        <Field label="Jours et horaires de disponibilite" name="handicap_referent_dispo" data={data} update={update} />
       </div>
+
+      <div className="pb-20" />
+      <SaveBar />
     </PageSection>
   );
 }
