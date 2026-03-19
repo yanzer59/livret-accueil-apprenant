@@ -109,7 +109,9 @@ export default function Page() {
       </div>
 
       <div className="pb-20" />
-      <SaveBar />
+      <SaveBar requiredFields={[
+        { name: "droit_image", label: "Choix droit a l'image" },
+      ]} />
     </PageSection>
   );
 }

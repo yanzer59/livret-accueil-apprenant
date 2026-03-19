@@ -108,7 +108,28 @@ export default function Page() {
         <Field label="Adresse complete" name="adresse" data={data} update={update} bg="bg-light px-2" required />
         <DoubleField label1="Telephone" name1="telephone" label2="E-mail" name2="email" type2="email" data={data} update={update} req1 req2 />
         <Field label="Formation preparee" name="formation" data={data} update={update} bg="bg-light px-2" required />
-        <Field label="Diplome / Titre vise (RNCP)" name="diplome" data={data} update={update} required />
+        {/* Menu deroulant RNCP */}
+        <div className="flex flex-col sm:flex-row sm:items-center py-2 border-b border-dotted border-gray-300">
+          <label htmlFor="diplome" className="font-bold text-primary text-sm w-52 shrink-0">
+            Diplome / Titre vise (RNCP) :<span className="text-red ml-0.5">*</span>
+          </label>
+          <select
+            id="diplome"
+            value={(data.diplome as string) || ""}
+            onChange={(e) => update("diplome", e.target.value)}
+            className={`flex-1 border rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary ${!data.diplome ? "border-red/50 bg-red/5" : "border-gray-300"}`}
+          >
+            <option value="">-- Selectionnez un titre RNCP --</option>
+            <option value="Employe polyvalent en restauration">Employe polyvalent en restauration</option>
+            <option value="AMIS">AMIS</option>
+            <option value="AMUM">AMUM</option>
+            <option value="RPMS">RPMS</option>
+            <option value="CC">CC</option>
+            <option value="CV">CV</option>
+            <option value="FPA">FPA</option>
+            <option value="CADGA">CADGA</option>
+          </select>
+        </div>
       </div>
 
       {/* EN CAS D'URGENCE */}
@@ -152,7 +173,19 @@ export default function Page() {
       </div>
 
       <div className="pb-20" />
-      <SaveBar />
+      <SaveBar requiredFields={[
+        { name: "nom", label: "Nom" }, { name: "prenom", label: "Prenom" },
+        { name: "date_naissance", label: "Date de naissance" }, { name: "adresse", label: "Adresse" },
+        { name: "telephone", label: "Telephone" }, { name: "email", label: "E-mail" },
+        { name: "formation", label: "Formation" }, { name: "diplome", label: "Diplome" },
+        { name: "urgence_contact", label: "Contact urgence" }, { name: "urgence_tel1", label: "Tel. urgence" },
+        { name: "entreprise_nom", label: "Raison sociale" }, { name: "entreprise_adresse", label: "Adresse entreprise" },
+        { name: "entreprise_tel", label: "Tel. entreprise" }, { name: "entreprise_email", label: "E-mail entreprise" },
+        { name: "entreprise_activite", label: "Activite entreprise" },
+        { name: "entreprise_debut", label: "Debut contrat" }, { name: "entreprise_fin", label: "Fin contrat" },
+        { name: "ma_nom", label: "Nom tuteur" }, { name: "ma_prenom", label: "Prenom tuteur" },
+        { name: "ma_poste", label: "Poste tuteur" }, { name: "ma_tel", label: "Tel. tuteur" }, { name: "ma_email", label: "E-mail tuteur" },
+      ]} />
     </PageSection>
   );
 }

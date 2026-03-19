@@ -58,7 +58,9 @@ export default function Page() {
       </div>
 
       <div className="pb-20" />
-      <SaveBar />
+      <SaveBar requiredFields={[
+        { name: "signature_apprenti", label: "Signature apprenti(e)" },
+      ]} />
     </PageSection>
   );
 }

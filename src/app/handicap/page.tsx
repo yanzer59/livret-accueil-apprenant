@@ -3,12 +3,17 @@ import { useStudent } from "@/lib/StudentContext";
 import { PageSection, SectionBanner, InfoCard, AlertBox } from "@/components/ui";
 import SaveBar from "@/components/SaveBar";
 
-function Field({ label, name, data, update }: { label: string; name: string; data: Record<string, unknown>; update: (n: string, v: string) => void }) {
+function Field({ label, name, data, update, required }: { label: string; name: string; data: Record<string, unknown>; update: (n: string, v: string) => void; required?: boolean }) {
+  const v = (data[name] as string) || "";
+  const empty = required && !v.trim();
   return (
     <div className="py-1.5">
-      <label className="block text-xs font-bold text-primary mb-1">{label} :</label>
-      <input type="text" value={(data[name] as string) || ""} onChange={(e) => update(name, e.target.value)}
-        className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" />
+      <label className="block text-xs font-bold text-primary mb-1">
+        {label} :{required && <span className="text-red ml-0.5">*</span>}
+      </label>
+      <input type="text" value={v} onChange={(e) => update(name, e.target.value)}
+        placeholder={required ? "Obligatoire" : ""}
+        className={`w-full border rounded px-3 py-2 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary ${empty ? "border-red/50 bg-red/5" : "border-gray-300"}`} />
     </div>
   );
 }
@@ -23,6 +28,10 @@ export default function Page() {
       <p className="text-dark text-sm">
         Le CFA s&apos;engage a accueillir et accompagner les personnes en situation de handicap
         tout au long de leur parcours de formation, conformement a la loi du 11 fevrier 2005.
+      </p>
+
+      <p className="text-xs text-red mb-2 mt-4">
+        <span className="font-bold">*</span> Champs obligatoires
       </p>
 
       <SectionBanner title="DISPOSITIFS D'ACCOMPAGNEMENT" color="bg-primary" />
@@ -46,15 +55,20 @@ export default function Page() {
 
       <SectionBanner title="REFERENT HANDICAP DU CFA" color="bg-secondary" />
       <div className="border border-gray-200 border-t-0 p-4">
-        <Field label="Nom et prenom" name="handicap_referent_nom" data={data} update={update} />
-        <Field label="Fonction" name="handicap_referent_fonction" data={data} update={update} />
-        <Field label="Telephone" name="handicap_referent_tel" data={data} update={update} />
-        <Field label="E-mail" name="handicap_referent_email" data={data} update={update} />
+        <Field label="Nom et prenom" name="handicap_referent_nom" data={data} update={update} required />
+        <Field label="Fonction" name="handicap_referent_fonction" data={data} update={update} required />
+        <Field label="Telephone" name="handicap_referent_tel" data={data} update={update} required />
+        <Field label="E-mail" name="handicap_referent_email" data={data} update={update} required />
         <Field label="Jours et horaires de disponibilite" name="handicap_referent_dispo" data={data} update={update} />
       </div>
 
       <div className="pb-20" />
-      <SaveBar />
+      <SaveBar requiredFields={[
+        { name: "handicap_referent_nom", label: "Nom referent handicap" },
+        { name: "handicap_referent_fonction", label: "Fonction referent" },
+        { name: "handicap_referent_tel", label: "Telephone referent" },
+        { name: "handicap_referent_email", label: "E-mail referent" },
+      ]} />
     </PageSection>
   );
 }
