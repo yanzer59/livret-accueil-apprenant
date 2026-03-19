@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1B4F72;
+  --color-secondary: #2E86C1;
+  --color-accent: #D4AC0D;
+  --color-green: #27AE60;
+  --color-red: #E74C3C;
+  --color-orange: #E67E22;
+  --color-light: #EBF5FB;
+  --color-light-gold: #FEF9E7;
+  --color-dark: #1C2833;
+  --color-gray-text: #5D6D7E;
+  --color-light-gray: #F2F3F4;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', 'Calibri', sans-serif;
+}
