@@ -34,11 +34,6 @@ export default function AdminDashboard() {
     checkAuth();
   }, [router, fetchStudents]);
 
-  async function handleLogout() {
-    await getSupabase().auth.signOut();
-    router.push("/admin/login");
-  }
-
   async function downloadFiche(student: Student) {
     setDownloading(student.id);
     try {
@@ -105,17 +100,9 @@ export default function AdminDashboard() {
   return (
     <div className="max-w-5xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-primary">Dashboard Administration</h1>
-          <p className="text-sm text-gray-text mt-1">Gestion des fiches apprenants</p>
-        </div>
-        <button
-          onClick={handleLogout}
-          className="bg-red hover:bg-red/80 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
-        >
-          Deconnexion
-        </button>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-primary">Dashboard Administration</h1>
+        <p className="text-sm text-gray-text mt-1">Gestion des fiches apprenants</p>
       </div>
 
       {/* Info */}

@@ -126,14 +126,43 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
     );
   }
 
+  async function handleLogout() {
+    await getSupabase().auth.signOut();
+    setAuthenticated(false);
+    setIsAdmin(false);
+    router.push("/");
+  }
+
+  // Recuperer l'email du user connecte
+  const [userEmail, setUserEmail] = useState("");
+  useEffect(() => {
+    async function getEmail() {
+      const { data: { user } } = await getSupabase().auth.getUser();
+      if (user?.email) setUserEmail(user.email);
+    }
+    if (authenticated) getEmail();
+  }, [authenticated]);
+
   // CONNECTE → Site complet avec sidebar + donnees etudiant
   return (
     <StudentProvider>
       <div className="flex min-h-screen">
         <Sidebar isAdmin={isAdmin} />
-        <main className="flex-1 p-6 lg:p-10 overflow-y-auto pb-20">
-          {children}
-        </main>
+        <div className="flex-1 flex flex-col">
+          {/* Barre du haut avec deconnexion */}
+          <div className="bg-white border-b border-gray-200 px-6 py-2.5 flex items-center justify-end gap-3 shrink-0">
+            <span className="text-xs text-gray-text">{userEmail}</span>
+            <button
+              onClick={handleLogout}
+              className="bg-red hover:bg-red/80 text-white text-xs font-medium px-3 py-1.5 rounded transition-colors"
+            >
+              Deconnexion
+            </button>
+          </div>
+          <main className="flex-1 p-6 lg:p-10 overflow-y-auto pb-20">
+            {children}
+          </main>
+        </div>
       </div>
     </StudentProvider>
   );
