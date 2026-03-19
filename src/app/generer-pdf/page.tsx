@@ -47,11 +47,27 @@ export default function Page() {
   async function generateDocx() {
     setGenerating(true);
     try {
-      const { generateLivretDocx } = await import("@/lib/generateLivret");
-      const { saveAs } = await import("file-saver");
-      const blob = await generateLivretDocx(data);
+      const response = await fetch("/api/generate-livret", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || "Erreur serveur");
+      }
+
+      const blob = await response.blob();
       const filename = `livret-accueil-${(v("nom") || "apprenant").toLowerCase().replace(/\s+/g, "-")}.docx`;
-      saveAs(blob, filename);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     } catch (err) {
       console.error("Erreur generation:", err);
       alert("Erreur : " + (err as Error).message);

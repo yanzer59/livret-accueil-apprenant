@@ -340,5 +340,13 @@ export async function generateLivretDocx(data: Partial<Student>): Promise<Blob> 
     ],
   });
 
-  return await Packer.toBlob(doc);
+  // Packer.toBlob() crashes in browser ("r is not a function") due to jszip bundling issues.
+  // Use toBase64String() instead and manually convert to Blob.
+  const base64 = await Packer.toBase64String(doc);
+  const binaryString = atob(base64);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
 }
