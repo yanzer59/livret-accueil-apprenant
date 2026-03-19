@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { PageSection, SectionBanner, InfoCard } from "@/components/ui";
+import { SchemaTimeline, SchemaActeurs } from "@/components/schemas";
 
 export default function Page() {
   return (
@@ -18,15 +18,7 @@ export default function Page() {
         </p>
       </InfoCard>
 
-      <div className="flex justify-center my-4">
-        <Image
-          src="/images/schema_timeline.png"
-          alt="Schema de l'organisation du parcours en alternance"
-          width={800}
-          height={400}
-          className="rounded shadow-md"
-        />
-      </div>
+      <SchemaTimeline />
 
       <SectionBanner title="LES ACTEURS DE VOTRE REUSSITE" color="bg-secondary" />
       <InfoCard color="border-secondary">
@@ -43,15 +35,7 @@ export default function Page() {
         </ul>
       </InfoCard>
 
-      <div className="flex justify-center my-4">
-        <Image
-          src="/images/schema_acteurs.png"
-          alt="Schema des acteurs de la formation en alternance"
-          width={800}
-          height={400}
-          className="rounded shadow-md"
-        />
-      </div>
+      <SchemaActeurs />
 
       <InfoCard color="border-accent">
         <p className="text-sm text-dark">

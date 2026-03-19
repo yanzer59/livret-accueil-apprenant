@@ -1,5 +1,5 @@
-import Image from "next/image";
-import { PageSection, SectionBanner, TimelineStep, DataTable, InfoCard } from "@/components/ui";
+import { PageSection, SectionBanner, TimelineStep, DataTable } from "@/components/ui";
+import { SchemaTimeline } from "@/components/schemas";
 
 export default function Page() {
   return (
@@ -73,21 +73,8 @@ export default function Page() {
         ]}
       />
 
-      <InfoCard color="border-primary">
-        <p className="text-sm text-dark">
-          <span className="font-bold text-primary">Schema du parcours de formation :</span>
-        </p>
-      </InfoCard>
-
-      <div className="flex justify-center my-4">
-        <Image
-          src="/images/schema_timeline.png"
-          alt="Schema du parcours de formation en alternance"
-          width={800}
-          height={400}
-          className="rounded shadow-md"
-        />
-      </div>
+      <SectionBanner title="SCHEMA DU PARCOURS" color="bg-accent" />
+      <SchemaTimeline />
     </PageSection>
   );
 }

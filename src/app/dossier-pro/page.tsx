@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { PageSection, SectionBanner, InfoCard, AlertBox } from "@/components/ui";
+import { SchemaCertification } from "@/components/schemas";
 
 export default function Page() {
   return (
@@ -45,15 +45,7 @@ export default function Page() {
       </InfoCard>
 
       <SectionBanner title="SCHEMA DU PROCESSUS DE CERTIFICATION" color="bg-primary" />
-      <div className="flex justify-center my-4">
-        <Image
-          src="/images/schema_certification.png"
-          alt="Schema du processus de certification"
-          width={800}
-          height={400}
-          className="rounded shadow-md"
-        />
-      </div>
+      <SchemaCertification />
 
       <SectionBanner title="DOCUMENTS COMPLEMENTAIRES" color="bg-accent" />
       <InfoCard color="border-accent">
