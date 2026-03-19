@@ -47,9 +47,23 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, [isLoginPage, router]);
 
-  // Page login : toujours afficher
+  // Page login : afficher SANS sidebar, plein ecran
   if (isLoginPage) {
-    return <>{children}</>;
+    return (
+      <div className="min-h-screen bg-primary flex items-center justify-center">
+        <div className="w-full max-w-md mx-4">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-white">Livret d&apos;accueil</h1>
+            <p className="text-blue-200 mt-1">de l&apos;apprenant</p>
+            <div className="w-20 h-1 bg-accent mx-auto mt-4"></div>
+          </div>
+          <div className="bg-white rounded-lg shadow-xl p-8">
+            {children}
+          </div>
+          <p className="text-center text-blue-300 text-xs mt-6">Acces reserve - Veuillez vous identifier</p>
+        </div>
+      </div>
+    );
   }
 
   // Chargement
@@ -69,6 +83,6 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     return null;
   }
 
-  // Connecte → afficher le contenu
+  // Connecte → afficher le site avec sidebar
   return <>{children}</>;
 }
