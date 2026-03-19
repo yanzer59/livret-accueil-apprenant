@@ -180,7 +180,7 @@ export default function AdminDashboard() {
       {selectedStudent && (
         <div className="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
           <div className="bg-secondary text-white px-6 py-3 flex items-center justify-between">
-            <h2 className="font-bold">Fiche de {selectedStudent.prenom || ""} {selectedStudent.nom || "l\u2019apprenant"}</h2>
+            <h2 className="font-bold">Fiche de {selectedStudent.prenom && selectedStudent.nom ? `${selectedStudent.prenom} ${selectedStudent.nom}` : "l'apprenant"}</h2>
             <button onClick={() => setSelectedStudent(null)} className="text-white/80 hover:text-white text-sm">Fermer</button>
           </div>
           <div className="p-6 space-y-4">
