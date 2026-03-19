@@ -52,4 +52,10 @@ export interface Student {
   resp2_adresse: string | null;
   resp2_tel: string | null;
   resp2_email: string | null;
+  // Droit a l'image
+  droit_image: string | null; // "accorde" | "refuse" | null
+  // Signatures (base64 PNG)
+  signature_apprenti: string | null;
+  signature_tuteur: string | null;
+  signature_cfa: string | null;
 }
