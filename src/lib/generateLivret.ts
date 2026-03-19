@@ -2,7 +2,7 @@ import {
   Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
   Header, Footer, AlignmentType, LevelFormat, HeadingLevel,
   BorderStyle, WidthType, ShadingType, PageNumber, PageBreak,
-  VerticalAlign, ImageRun,
+  VerticalAlign,
 } from "docx";
 import type { Student } from "./supabase";
 
@@ -321,35 +321,17 @@ export async function generateLivretDocx(data: Partial<Student>): Promise<Blob> 
 
           // Signature apprenti
           banner("SIGNATURE DE L'APPRENTI(E)", C.secondary),
-          ...(v("signature_apprenti") ? [
-            new Paragraph({ spacing: { before: 100, after: 100 }, children: [
-              new ImageRun({ type: "png", data: base64ToUint8Array(v("signature_apprenti").split(",")[1]),
-                transformation: { width: 250, height: 100 },
-                altText: { title: "Signature", description: "Signature apprenti", name: "sig" } }),
-            ] }),
-          ] : [para("(Non signe)", { italic: true, color: C.gray })]),
+          para(v("signature_apprenti") ? "Signe electroniquement" : "(Non signe)", { italic: true, color: v("signature_apprenti") ? C.green : C.gray }),
           empty(),
 
           // Signature tuteur
           banner("SIGNATURE DU TUTEUR", C.accent),
-          ...(v("signature_tuteur") ? [
-            new Paragraph({ spacing: { before: 100, after: 100 }, children: [
-              new ImageRun({ type: "png", data: base64ToUint8Array(v("signature_tuteur").split(",")[1]),
-                transformation: { width: 250, height: 100 },
-                altText: { title: "Signature", description: "Signature tuteur", name: "sig2" } }),
-            ] }),
-          ] : [para("(Non signe)", { italic: true, color: C.gray })]),
+          para(v("signature_tuteur") ? "Signe electroniquement" : "(Non signe)", { italic: true, color: v("signature_tuteur") ? C.green : C.gray }),
           empty(),
 
           // Signature CFA
           banner("SIGNATURE DU RESPONSABLE CFA", C.primary),
-          ...(v("signature_cfa") ? [
-            new Paragraph({ spacing: { before: 100, after: 100 }, children: [
-              new ImageRun({ type: "png", data: base64ToUint8Array(v("signature_cfa").split(",")[1]),
-                transformation: { width: 250, height: 100 },
-                altText: { title: "Signature", description: "Signature CFA", name: "sig3" } }),
-            ] }),
-          ] : [para("(Non signe)", { italic: true, color: C.gray })]),
+          para(v("signature_cfa") ? "Signe electroniquement" : "(Non signe)", { italic: true, color: v("signature_cfa") ? C.green : C.gray }),
           empty(),
 
           para(`Fait le ${new Date().toLocaleDateString("fr-FR")}`, { italic: true, color: C.gray }),
@@ -358,6 +340,5 @@ export async function generateLivretDocx(data: Partial<Student>): Promise<Blob> 
     ],
   });
 
-  const buffer = await Packer.toBlob(doc);
-  return buffer;
+  return await Packer.toBlob(doc);
 }
