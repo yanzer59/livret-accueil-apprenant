@@ -3,6 +3,7 @@ import {
   Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
   Header, Footer, AlignmentType, LevelFormat, HeadingLevel,
   BorderStyle, WidthType, ShadingType, PageNumber, PageBreak,
+  ImageRun,
 } from "docx";
 
 // ============ COLORS ============
@@ -89,6 +90,33 @@ function infoBox(text: string) {
     border: { top: { style: BorderStyle.SINGLE, size: 1, color: C.light }, bottom: { style: BorderStyle.SINGLE, size: 1, color: C.light }, left: { style: BorderStyle.SINGLE, size: 1, color: C.light }, right: { style: BorderStyle.SINGLE, size: 1, color: C.light } },
     children: [new TextRun({ text: "   " + text, size: 18, font: "Calibri", color: C.primary })],
   });
+}
+
+// ============ SIGNATURE IMAGE ============
+function signatureBlock(dataUrl: string): Paragraph[] {
+  if (!dataUrl || !dataUrl.startsWith("data:image")) {
+    return [para("(Non signe)", { italic: true, color: C.gray })];
+  }
+  try {
+    // Extract base64 from data URL: "data:image/png;base64,xxxxx"
+    const base64 = dataUrl.split(",")[1];
+    const imageBuffer = Buffer.from(base64, "base64");
+    return [
+      new Paragraph({
+        spacing: { before: 80, after: 80 },
+        children: [
+          new ImageRun({
+            data: imageBuffer,
+            transformation: { width: 250, height: 80 },
+            type: "png",
+          }),
+        ],
+      }),
+      para("Signe electroniquement", { italic: true, color: C.green, size: 16 }),
+    ];
+  } catch {
+    return [para("(Signature illisible)", { italic: true, color: C.gray })];
+  }
 }
 
 // ============ API ROUTE ============
@@ -310,15 +338,15 @@ export async function POST(request: NextRequest) {
             empty(),
 
             banner("SIGNATURE DE L'APPRENTI(E)", C.secondary),
-            para(v("signature_apprenti") ? "Signe electroniquement" : "(Non signe)", { italic: true, color: v("signature_apprenti") ? C.green : C.gray }),
+            ...signatureBlock(v("signature_apprenti")),
             empty(),
 
             banner("SIGNATURE DU TUTEUR", C.accent),
-            para(v("signature_tuteur") ? "Signe electroniquement" : "(Non signe)", { italic: true, color: v("signature_tuteur") ? C.green : C.gray }),
+            ...signatureBlock(v("signature_tuteur")),
             empty(),
 
             banner("SIGNATURE DU RESPONSABLE CFA", C.primary),
-            para(v("signature_cfa") ? "Signe electroniquement" : "(Non signe)", { italic: true, color: v("signature_cfa") ? C.green : C.gray }),
+            ...signatureBlock(v("signature_cfa")),
             empty(),
 
             para(`Fait le ${new Date().toLocaleDateString("fr-FR")}`, { italic: true, color: C.gray }),

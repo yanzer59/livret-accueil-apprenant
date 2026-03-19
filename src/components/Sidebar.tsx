@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { sections } from "@/lib/sections";
 import { useState } from "react";
 
-export default function Sidebar() {
+export default function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -116,26 +116,30 @@ export default function Sidebar() {
             <span className="truncate">Generer mon livret</span>
           </Link>
 
-          <div className="border-b border-gray-200 my-2"></div>
+          {isAdmin && (
+            <>
+              <div className="border-b border-gray-200 my-2"></div>
 
-          {/* Admin */}
-          <Link
-            href="/admin"
-            onClick={() => setOpen(false)}
-            className={`
-              flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors
-              ${pathname.startsWith("/admin")
-                ? "bg-secondary text-white font-semibold"
-                : "text-gray-text hover:bg-light hover:text-secondary"
-              }
-            `}
-          >
-            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0
-              ${pathname.startsWith("/admin") ? "bg-white text-secondary" : "bg-light-gray text-gray-text"}`}>
-              A
-            </span>
-            <span className="truncate">Administration</span>
-          </Link>
+              {/* Admin */}
+              <Link
+                href="/admin"
+                onClick={() => setOpen(false)}
+                className={`
+                  flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors
+                  ${pathname.startsWith("/admin")
+                    ? "bg-secondary text-white font-semibold"
+                    : "text-gray-text hover:bg-light hover:text-secondary"
+                  }
+                `}
+              >
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0
+                  ${pathname.startsWith("/admin") ? "bg-white text-secondary" : "bg-light-gray text-gray-text"}`}>
+                  A
+                </span>
+                <span className="truncate">Administration</span>
+              </Link>
+            </>
+          )}
         </nav>
       </aside>
     </>

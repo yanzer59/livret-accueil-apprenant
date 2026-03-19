@@ -7,6 +7,7 @@ import { StudentProvider } from "@/lib/StudentContext";
 
 export default function AuthShell({ children }: { children: React.ReactNode }) {
   const [authenticated, setAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,8 +20,10 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
       try {
         const { data: { session } } = await getSupabase().auth.getSession();
         setAuthenticated(!!session);
+        setIsAdmin(session?.user?.email === "admin@livret.local");
       } catch {
         setAuthenticated(false);
+        setIsAdmin(false);
       }
       setLoading(false);
     }
@@ -28,6 +31,7 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
 
     const { data: { subscription } } = getSupabase().auth.onAuthStateChange((_event, session) => {
       setAuthenticated(!!session);
+      setIsAdmin(session?.user?.email === "admin@livret.local");
     });
 
     return () => subscription.unsubscribe();
@@ -126,7 +130,7 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
   return (
     <StudentProvider>
       <div className="flex min-h-screen">
-        <Sidebar />
+        <Sidebar isAdmin={isAdmin} />
         <main className="flex-1 p-6 lg:p-10 overflow-y-auto pb-20">
           {children}
         </main>
