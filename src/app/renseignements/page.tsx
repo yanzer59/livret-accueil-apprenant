@@ -107,7 +107,26 @@ export default function Page() {
         <Field label="Date de naissance" name="date_naissance" type="date" data={data} update={update} required />
         <Field label="Adresse complete" name="adresse" data={data} update={update} bg="bg-light px-2" required />
         <DoubleField label1="Telephone" name1="telephone" label2="E-mail" name2="email" type2="email" data={data} update={update} req1 req2 />
-        <Field label="Formation preparee" name="formation" data={data} update={update} bg="bg-light px-2" required />
+        {/* Menu deroulant Formation preparee */}
+        <div className="flex flex-col sm:flex-row sm:items-center py-2 border-b border-dotted border-gray-300 bg-light px-2">
+          <label htmlFor="formation" className="font-bold text-primary text-sm w-52 shrink-0">
+            Formation preparee :<span className="text-red ml-0.5">*</span>
+          </label>
+          <select
+            id="formation"
+            value={(data.formation as string) || ""}
+            onChange={(e) => update("formation", e.target.value)}
+            className={`flex-1 border rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary ${!data.formation ? "border-red/50 bg-red/5" : "border-gray-300"}`}
+          >
+            <option value="">-- Selectionnez un niveau --</option>
+            <option value="CAP">CAP (Certificat d&apos;Aptitude Professionnelle)</option>
+            <option value="BEP">BEP (Brevet d&apos;Etudes Professionnelles)</option>
+            <option value="Bac Pro">Bac Pro (Baccalaureat Professionnel)</option>
+            <option value="BTS">BTS (Brevet de Technicien Superieur)</option>
+            <option value="Licence Pro">Licence Professionnelle</option>
+            <option value="Titre Professionnel">Titre Professionnel (TP)</option>
+          </select>
+        </div>
         {/* Menu deroulant RNCP */}
         <div className="flex flex-col sm:flex-row sm:items-center py-2 border-b border-dotted border-gray-300">
           <label htmlFor="diplome" className="font-bold text-primary text-sm w-52 shrink-0">
