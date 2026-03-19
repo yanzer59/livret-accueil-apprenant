@@ -13,6 +13,7 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -37,6 +38,15 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Recuperer l'email du user connecte
+  useEffect(() => {
+    async function getEmail() {
+      const { data: { user } } = await getSupabase().auth.getUser();
+      if (user?.email) setUserEmail(user.email);
+    }
+    if (authenticated) getEmail();
+  }, [authenticated]);
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setLoginError("");
@@ -51,6 +61,13 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
       setAuthenticated(true);
       router.push("/");
     }
+  }
+
+  async function handleLogout() {
+    await getSupabase().auth.signOut();
+    setAuthenticated(false);
+    setIsAdmin(false);
+    router.push("/");
   }
 
   // Chargement initial
@@ -125,23 +142,6 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
       </div>
     );
   }
-
-  async function handleLogout() {
-    await getSupabase().auth.signOut();
-    setAuthenticated(false);
-    setIsAdmin(false);
-    router.push("/");
-  }
-
-  // Recuperer l'email du user connecte
-  const [userEmail, setUserEmail] = useState("");
-  useEffect(() => {
-    async function getEmail() {
-      const { data: { user } } = await getSupabase().auth.getUser();
-      if (user?.email) setUserEmail(user.email);
-    }
-    if (authenticated) getEmail();
-  }, [authenticated]);
 
   // CONNECTE → Site complet avec sidebar + donnees etudiant
   return (
