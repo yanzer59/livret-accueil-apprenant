@@ -15,6 +15,7 @@ export function getSupabase(): SupabaseClient {
 
 export interface Student {
   id: string;
+  user_id: string | null;
   token: string;
   created_at: string;
   updated_at: string;

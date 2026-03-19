@@ -95,6 +95,29 @@ export default function Sidebar() {
 
           <div className="border-b border-gray-200 my-2"></div>
 
+          {/* Generer PDF */}
+          <Link
+            href="/generer-pdf"
+            onClick={() => setOpen(false)}
+            className={`
+              flex items-center gap-3 px-3 py-2.5 rounded-md text-sm mb-1 transition-colors
+              ${pathname === "/generer-pdf"
+                ? "bg-green text-white font-semibold"
+                : "bg-green/10 text-green hover:bg-green/20 font-semibold"
+              }
+            `}
+          >
+            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0
+              ${pathname === "/generer-pdf" ? "bg-white text-green" : "bg-green text-white"}`}>
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </span>
+            <span className="truncate">Generer mon livret</span>
+          </Link>
+
+          <div className="border-b border-gray-200 my-2"></div>
+
           {/* Admin */}
           <Link
             href="/admin"

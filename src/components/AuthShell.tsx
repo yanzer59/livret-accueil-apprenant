@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
 import Sidebar from "@/components/Sidebar";
+import { StudentProvider } from "@/lib/StudentContext";
 
 export default function AuthShell({ children }: { children: React.ReactNode }) {
   const [authenticated, setAuthenticated] = useState(false);
@@ -121,13 +122,15 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // CONNECTE → Site complet avec sidebar
+  // CONNECTE → Site complet avec sidebar + donnees etudiant
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <main className="flex-1 p-6 lg:p-10 overflow-y-auto">
-        {children}
-      </main>
-    </div>
+    <StudentProvider>
+      <div className="flex min-h-screen">
+        <Sidebar />
+        <main className="flex-1 p-6 lg:p-10 overflow-y-auto pb-20">
+          {children}
+        </main>
+      </div>
+    </StudentProvider>
   );
 }
