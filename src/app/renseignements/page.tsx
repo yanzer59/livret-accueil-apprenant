@@ -120,14 +120,14 @@ export default function Page() {
             className={`flex-1 border rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary ${!data.diplome ? "border-red/50 bg-red/5" : "border-gray-300"}`}
           >
             <option value="">-- Selectionnez un titre RNCP --</option>
-            <option value="Employe polyvalent en restauration">Employe polyvalent en restauration</option>
-            <option value="AMIS">AMIS</option>
-            <option value="AMUM">AMUM</option>
-            <option value="RPMS">RPMS</option>
-            <option value="CC">CC</option>
-            <option value="CV">CV</option>
-            <option value="FPA">FPA</option>
-            <option value="CADGA">CADGA</option>
+            <option value="Employe polyvalent en restauration">Employe polyvalent en restauration (EPR)</option>
+            <option value="Agent de Mediation, Information et Services">Agent de Mediation, Information et Services (AMIS)</option>
+            <option value="Assistant Manager d'Unite Marchande">Assistant Manager d&apos;Unite Marchande (AMUM)</option>
+            <option value="Responsable de Petite et Moyenne Structure">Responsable de Petite et Moyenne Structure (RPMS)</option>
+            <option value="Conseiller Commercial">Conseiller Commercial (CC)</option>
+            <option value="Conseiller de Vente">Conseiller de Vente (CV)</option>
+            <option value="Formateur Professionnel d'Adultes">Formateur Professionnel d&apos;Adultes (FPA)</option>
+            <option value="Charge d'Accueil et de Gestion Administrative">Charge d&apos;Accueil et de Gestion Administrative (CADGA)</option>
           </select>
         </div>
       </div>
