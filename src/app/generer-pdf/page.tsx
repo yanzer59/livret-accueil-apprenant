@@ -126,9 +126,9 @@ export default function Page() {
   async function generatePDF() {
     setGenerating(true);
     try {
-      const jsPDFModule = await import("jspdf");
-      const jsPDF = jsPDFModule.default;
-      await import("jspdf-autotable");
+      // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
+      const jsPDF = (await import("jspdf")).default;
+      await import("jspdf-autotable" as any);
 
       const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" }) as InstanceType<typeof jsPDF> & JsPDFWithAutoTable;
       const pageWidth = doc.internal.pageSize.getWidth();
@@ -427,9 +427,7 @@ export default function Page() {
           }
         } else {
           doc.setDrawColor(200, 200, 200);
-          doc.setLineDashPattern([2, 2], 0);
           doc.rect(margin, currentY, pageWidth - margin * 2, 35);
-          doc.setLineDashPattern([], 0);
           doc.setTextColor(180, 180, 180);
           doc.setFontSize(9);
           doc.setFont("helvetica", "italic");
