@@ -27,8 +27,6 @@ export function SchemaTimeline() {
           </div>
         ))}
       </div>
-      {/* Ligne horizontale de liaison */}
-      <div className="hidden sm:block relative -mt-[76px] mx-[6%] h-0.5 bg-gray-200 -z-10"></div>
     </div>
   );
 }
