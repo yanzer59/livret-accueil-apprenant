@@ -6,6 +6,14 @@ import {
 } from "docx";
 import type { Student } from "./supabase";
 
+// Browser-safe base64 to Uint8Array
+function base64ToUint8Array(base64: string): Uint8Array {
+  const raw = atob(base64);
+  const arr = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) arr[i] = raw.charCodeAt(i);
+  return arr;
+}
+
 // ============ COLORS ============
 const C = {
   primary: "1B4F72", secondary: "2E86C1", accent: "D4AC0D",
@@ -315,7 +323,7 @@ export async function generateLivretDocx(data: Partial<Student>): Promise<Blob> 
           banner("SIGNATURE DE L'APPRENTI(E)", C.secondary),
           ...(v("signature_apprenti") ? [
             new Paragraph({ spacing: { before: 100, after: 100 }, children: [
-              new ImageRun({ type: "png", data: Buffer.from(v("signature_apprenti").split(",")[1], "base64"),
+              new ImageRun({ type: "png", data: base64ToUint8Array(v("signature_apprenti").split(",")[1]),
                 transformation: { width: 250, height: 100 },
                 altText: { title: "Signature", description: "Signature apprenti", name: "sig" } }),
             ] }),
@@ -326,7 +334,7 @@ export async function generateLivretDocx(data: Partial<Student>): Promise<Blob> 
           banner("SIGNATURE DU TUTEUR", C.accent),
           ...(v("signature_tuteur") ? [
             new Paragraph({ spacing: { before: 100, after: 100 }, children: [
-              new ImageRun({ type: "png", data: Buffer.from(v("signature_tuteur").split(",")[1], "base64"),
+              new ImageRun({ type: "png", data: base64ToUint8Array(v("signature_tuteur").split(",")[1]),
                 transformation: { width: 250, height: 100 },
                 altText: { title: "Signature", description: "Signature tuteur", name: "sig2" } }),
             ] }),
@@ -337,7 +345,7 @@ export async function generateLivretDocx(data: Partial<Student>): Promise<Blob> 
           banner("SIGNATURE DU RESPONSABLE CFA", C.primary),
           ...(v("signature_cfa") ? [
             new Paragraph({ spacing: { before: 100, after: 100 }, children: [
-              new ImageRun({ type: "png", data: Buffer.from(v("signature_cfa").split(",")[1], "base64"),
+              new ImageRun({ type: "png", data: base64ToUint8Array(v("signature_cfa").split(",")[1]),
                 transformation: { width: 250, height: 100 },
                 altText: { title: "Signature", description: "Signature CFA", name: "sig3" } }),
             ] }),
