@@ -14,13 +14,13 @@ function Field({ label, name, type = "text", data, update, required }: {
   const v = (data[name] as string) || "";
   const empty = required && !v.trim();
   return (
-    <div className="py-1.5">
-      <label htmlFor={name} className="block text-xs font-medium text-foreground mb-1">
-        {label}{required && <span className="text-destructive ml-0.5">*</span>}
+    <div className="py-1">
+      <label htmlFor={name} className="block text-[11px] font-semibold text-gray-500 uppercase tracking-[0.04em] mb-1">
+        {label}{required && <span className="text-red-400 ml-0.5">*</span>}
       </label>
       <input id={name} type={type} value={v} onChange={(e) => update(name, e.target.value)}
-        placeholder={required ? "Obligatoire" : ""}
-        className={`w-full h-9 border bg-white px-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary ${empty ? "border-destructive/50 bg-destructive/5" : "border-input"}`} />
+        placeholder={required ? "" : ""}
+        className={`w-full h-9 border-b bg-transparent px-0 text-[14px] text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-b-2 focus:border-primary transition-input ${empty ? "border-red-300" : "border-gray-200"}`} />
     </div>
   );
 }
@@ -47,13 +47,12 @@ function TextArea({ label, name, data, update, required }: {
   const v = (data[name] as string) || "";
   const empty = required && !v.trim();
   return (
-    <div className="py-1.5">
-      <label className="block text-xs font-medium text-foreground mb-1">
-        {label}{required && <span className="text-destructive ml-0.5">*</span>}
+    <div className="py-1">
+      <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-[0.04em] mb-1">
+        {label}{required && <span className="text-red-400 ml-0.5">*</span>}
       </label>
       <textarea value={v} onChange={(e) => update(name, e.target.value)} rows={3}
-        placeholder={required ? "Obligatoire" : ""}
-        className={`w-full rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 resize-y ${empty ? "border-destructive/50 bg-destructive/5" : "border-input"}`} />
+        className={`w-full border bg-gray-50/50 px-3 py-2 text-[14px] text-gray-900 focus:outline-none focus:border-primary focus:bg-white transition-input resize-y ${empty ? "border-red-300" : "border-gray-200"}`} />
     </div>
   );
 }
@@ -65,13 +64,13 @@ function SelectField({ label, name, options, data, update, required }: {
 }) {
   const v = (data[name] as string) || "";
   return (
-    <div className="py-1.5">
-      <label className="block text-xs font-medium text-foreground mb-1">
-        {label}{required && <span className="text-destructive ml-0.5">*</span>}
+    <div className="py-1">
+      <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-[0.04em] mb-1">
+        {label}{required && <span className="text-red-400 ml-0.5">*</span>}
       </label>
       <select value={v} onChange={(e) => update(name, e.target.value)}
-        className={`w-full h-9 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${!v && required ? "border-destructive/50 bg-destructive/5" : "border-input"}`}>
-        <option value="">-- Selectionnez --</option>
+        className={`w-full h-9 border bg-transparent px-0 text-[14px] text-gray-900 focus:outline-none focus:border-primary transition-input ${!v && required ? "border-red-300" : "border-gray-200"} border-b border-t-0 border-l-0 border-r-0`}>
+        <option value="">Selectionnez</option>
         {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
       </select>
     </div>
@@ -81,11 +80,15 @@ function SelectField({ label, name, options, data, update, required }: {
 /* ======= Section wrapper ======= */
 function Section({ id, num, title, children }: { id: string; num: number; title: string; children: React.ReactNode }) {
   return (
-    <section id={id} className="scroll-mt-20 mb-10">
-      <h2 className="text-base font-semibold text-primary uppercase tracking-wide border-b-2 border-primary pb-2 mb-5">
-        {num}. {title}
-      </h2>
-      <div className="space-y-4">
+    <section id={id} className="scroll-mt-20 mb-12">
+      <div className="flex items-end gap-3 mb-6">
+        <span className="text-[28px] font-extralight text-accent leading-none">{String(num).padStart(2, "0")}</span>
+        <div className="flex-1">
+          <h2 className="text-[13px] font-bold text-gray-900 uppercase tracking-[0.08em]">{title}</h2>
+          <div className="mt-1.5 h-px bg-gray-200 w-full" />
+        </div>
+      </div>
+      <div className="space-y-3">
         {children}
       </div>
     </section>
@@ -95,9 +98,12 @@ function Section({ id, num, title, children }: { id: string; num: number; title:
 /* ======= Form block wrapper ======= */
 function FormBlock({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="mb-4">
-      <h3 className="text-sm font-semibold text-foreground bg-gray-50 px-4 py-2 border-l-4 border-primary mb-3">{title}</h3>
-      <div className="pl-4 space-y-1">{children}</div>
+    <div className="mb-6">
+      <div className="flex items-center gap-3 mb-3">
+        <div className="w-1 h-4 bg-accent shrink-0" />
+        <h3 className="text-[11px] font-bold text-gray-900 uppercase tracking-[0.08em]">{title}</h3>
+      </div>
+      <div className="space-y-1 pl-4">{children}</div>
     </div>
   );
 }

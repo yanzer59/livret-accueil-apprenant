@@ -87,64 +87,58 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
   if (!authenticated) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="w-full max-w-sm mx-4">
+        <div className="w-full max-w-[360px] mx-4">
           {/* Brand */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground mb-4">
-              <BookOpen className="h-6 w-6" />
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center w-10 h-10 bg-primary mb-4">
+              <span className="text-white text-sm font-bold">H</span>
             </div>
-            <h1 className="text-2xl font-bold text-foreground">Livrivia</h1>
-            <p className="text-muted-foreground text-sm mt-1">Livret d&apos;accueil de l&apos;apprenant</p>
+            <h1 className="text-xl font-bold text-gray-900 tracking-tight">Livrivia</h1>
+            <p className="text-gray-400 text-[12px] mt-1 tracking-wide uppercase">HEOL Groupe</p>
           </div>
 
-          {/* Login card */}
-          <div className="bg-card rounded-lg border border-border shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-foreground text-center mb-6">Connexion</h2>
+          {loginError && (
+            <div className="border-l-[3px] border-red-400 bg-red-50/50 px-4 py-2.5 mb-6 text-[13px] text-red-600">
+              {loginError}
+            </div>
+          )}
 
-            {loginError && (
-              <div className="bg-destructive/10 text-destructive border border-destructive/20 rounded-md px-4 py-2.5 mb-4 text-sm">
-                {loginError}
-              </div>
-            )}
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div>
+              <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-[0.04em] mb-1.5">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full h-10 border-b border-gray-200 bg-transparent px-0 text-[14px] text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-b-2 focus:border-primary transition-all"
+                placeholder="votre@email.com"
+                required
+              />
+            </div>
 
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-1.5">Email</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  placeholder="admin@livret.local"
-                  required
-                />
-              </div>
+            <div>
+              <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-[0.04em] mb-1.5">Mot de passe</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full h-10 border-b border-gray-200 bg-transparent px-0 text-[14px] text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-b-2 focus:border-primary transition-all"
+                required
+              />
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-1.5">Mot de passe</label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  placeholder="Votre mot de passe"
-                  required
-                />
-              </div>
+            <button
+              type="submit"
+              disabled={loginLoading}
+              className="w-full h-10 bg-primary text-white text-[13px] font-semibold tracking-wide uppercase hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 mt-8"
+            >
+              {loginLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+              {loginLoading ? "Connexion..." : "Se connecter"}
+            </button>
+          </form>
 
-              <button
-                type="submit"
-                disabled={loginLoading}
-                className="w-full h-10 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {loginLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-                {loginLoading ? "Connexion..." : "Se connecter"}
-              </button>
-            </form>
-          </div>
-
-          <p className="text-center text-muted-foreground text-xs mt-6">
-            Acces reserve — Veuillez vous identifier
+          <p className="text-center text-gray-300 text-[11px] mt-8 tracking-wide">
+            Acces reserve
           </p>
         </div>
       </div>
