@@ -74,7 +74,7 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
   // Loading
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-muted">
+      <div className="flex items-center justify-center min-h-screen bg-white">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-3" />
           <p className="text-muted-foreground text-sm">Chargement...</p>
@@ -86,7 +86,7 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
   // Login screen
   if (!authenticated) {
     return (
-      <div className="min-h-screen bg-muted flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="w-full max-w-sm mx-4">
           {/* Brand */}
           <div className="text-center mb-8">
@@ -154,9 +154,9 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
   // Authenticated layout — single scrolling page, no sidebar
   return (
     <StudentProvider>
-      <div className="min-h-screen bg-muted">
+      <div className="min-h-screen bg-white">
         <Header userEmail={userEmail} isAdmin={isAdmin} onLogout={handleLogout} />
-        <main className="mx-auto max-w-4xl px-4 py-6 md:px-6 md:py-8">
+        <main className="mx-auto max-w-3xl px-6 py-8 md:px-8 md:py-10">
           {children}
         </main>
       </div>

@@ -59,11 +59,11 @@ export default function SignatureCanvas({ label, value, onSave }: SignatureCanva
   }
 
   return (
-    <div className="rounded-md border border-border overflow-hidden">
-      <div className="bg-primary text-primary-foreground font-medium text-sm px-4 py-2.5">
+    <div className="my-4">
+      <h4 className="text-xs font-bold text-primary uppercase tracking-wide mb-3 border-b border-primary pb-1">
         {label}
-      </div>
-      <div className="p-4 bg-card">
+      </h4>
+      <div>
         <p className="text-xs text-muted-foreground mb-3">Signez dans le cadre ci-dessous :</p>
 
         <div className="border-2 border-dashed border-border rounded-md overflow-hidden mb-3">

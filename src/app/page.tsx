@@ -20,7 +20,7 @@ function Field({ label, name, type = "text", data, update, required }: {
       </label>
       <input id={name} type={type} value={v} onChange={(e) => update(name, e.target.value)}
         placeholder={required ? "Obligatoire" : ""}
-        className={`w-full h-9 rounded-md border bg-background px-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${empty ? "border-destructive/50 bg-destructive/5" : "border-input"}`} />
+        className={`w-full h-9 border bg-white px-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary ${empty ? "border-destructive/50 bg-destructive/5" : "border-input"}`} />
     </div>
   );
 }
@@ -81,17 +81,12 @@ function SelectField({ label, name, options, data, update, required }: {
 /* ======= Section wrapper ======= */
 function Section({ id, num, title, children }: { id: string; num: number; title: string; children: React.ReactNode }) {
   return (
-    <section id={id} className="scroll-mt-20">
-      <div className="border-b border-border pb-8">
-        <div className="mb-5 flex items-center gap-3">
-          <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground text-sm font-bold shrink-0">{num}</span>
-          <h2 className="text-lg font-bold tracking-tight text-foreground">
-            {title}
-          </h2>
-        </div>
-        <div className="space-y-4 pl-11">
-          {children}
-        </div>
+    <section id={id} className="scroll-mt-20 mb-10">
+      <h2 className="text-base font-semibold text-primary uppercase tracking-wide border-b-2 border-primary pb-2 mb-5">
+        {num}. {title}
+      </h2>
+      <div className="space-y-4">
+        {children}
       </div>
     </section>
   );
@@ -100,9 +95,9 @@ function Section({ id, num, title, children }: { id: string; num: number; title:
 /* ======= Form block wrapper ======= */
 function FormBlock({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-md border border-border overflow-hidden">
-      <div className="bg-primary text-primary-foreground font-medium text-sm px-4 py-2.5">{title}</div>
-      <div className="p-4 space-y-1">{children}</div>
+    <div className="mb-4">
+      <h3 className="text-sm font-semibold text-foreground bg-gray-50 px-4 py-2 border-l-4 border-primary mb-3">{title}</h3>
+      <div className="pl-4 space-y-1">{children}</div>
     </div>
   );
 }
@@ -125,7 +120,7 @@ export default function Home() {
   const choice = (data.droit_image as string) || "";
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-24 bg-card p-6 md:p-10">
+    <div className="pb-24">
 
       {/* ═══════════════════ 1. BIENVENUE ═══════════════════ */}
       <Section id="bienvenue" num={1} title="Bienvenue dans votre formation">

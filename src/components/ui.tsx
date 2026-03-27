@@ -4,9 +4,9 @@ import React from "react";
 /* ========= SECTION BANNER ========= */
 export function SectionBanner({ title }: { title: string; color?: string }) {
   return (
-    <div className="bg-primary text-primary-foreground font-semibold text-sm px-4 py-2.5 rounded-md">
+    <h3 className="text-sm font-semibold text-foreground bg-gray-50 px-4 py-2 border-l-4 border-primary mt-5 mb-3">
       {title}
-    </div>
+    </h3>
   );
 }
 
@@ -27,7 +27,7 @@ export function AlertBox({ children, variant = "info" }: { children: React.React
     success: "bg-success/5 text-foreground border border-success/20",
   };
   return (
-    <div className={`${styles[variant]} px-4 py-3 rounded-md my-3 text-sm`}>
+    <div className={`${styles[variant]} px-4 py-3 my-3 text-sm border-l-4`}>
       {children}
     </div>
   );
@@ -36,16 +36,11 @@ export function AlertBox({ children, variant = "info" }: { children: React.React
 /* ========= TIMELINE STEP ========= */
 export function TimelineStep({ num, title, description }: { num: number; title: string; description: string; color?: string }) {
   return (
-    <div className="flex gap-3 my-2">
-      <div className="flex flex-col items-center">
-        <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center shrink-0">
-          {num}
-        </div>
-        <div className="w-px flex-1 bg-border mt-1" />
-      </div>
-      <div className="pb-4">
-        <h4 className="font-semibold text-sm text-foreground">{title}</h4>
-        <p className="text-sm text-muted-foreground mt-0.5">{description}</p>
+    <div className="flex gap-3 py-2 border-b border-gray-100 last:border-0">
+      <span className="text-sm font-bold text-primary shrink-0 w-6 text-right">{num}.</span>
+      <div>
+        <span className="font-semibold text-sm text-foreground">{title}</span>
+        <span className="text-sm text-muted-foreground ml-1.5">— {description}</span>
       </div>
     </div>
   );
@@ -54,13 +49,11 @@ export function TimelineStep({ num, title, description }: { num: number; title: 
 /* ========= NUMBERED STEP ========= */
 export function NumberedStep({ num, title, description }: { num: number; title: string; description: string; color?: string }) {
   return (
-    <div className="flex items-start gap-3 my-1.5">
-      <div className="h-6 w-6 rounded-full bg-muted text-foreground text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
-        {num}
-      </div>
+    <div className="flex items-start gap-2 py-1.5">
+      <span className="text-sm font-bold text-primary shrink-0 w-5 text-right">{num}.</span>
       <div>
         <span className="font-semibold text-sm text-foreground">{title}</span>
-        <span className="text-sm text-muted-foreground ml-1.5">{description}</span>
+        <span className="text-sm text-muted-foreground ml-1.5">— {description}</span>
       </div>
     </div>
   );
