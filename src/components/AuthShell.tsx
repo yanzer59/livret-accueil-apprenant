@@ -3,7 +3,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
 import Sidebar from "@/components/Sidebar";
+import Header from "@/components/Header";
 import { StudentProvider } from "@/lib/StudentContext";
+import { BookOpen, Loader2 } from "lucide-react";
 
 export default function AuthShell({ children }: { children: React.ReactNode }) {
   const [authenticated, setAuthenticated] = useState(false);
@@ -38,7 +40,6 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Recuperer l'email du user connecte
   useEffect(() => {
     async function getEmail() {
       const { data: { user } } = await getSupabase().auth.getUser();
@@ -70,58 +71,62 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
     router.push("/");
   }
 
-  // Chargement initial
+  // Loading
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-light-gray">
+      <div className="flex items-center justify-center min-h-screen bg-muted">
         <div className="text-center">
-          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-text text-sm">Chargement...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-3" />
+          <p className="text-muted-foreground text-sm">Chargement...</p>
         </div>
       </div>
     );
   }
 
-  // PAS CONNECTE → Page de login plein ecran, RIEN d'autre
+  // Login screen
   if (!authenticated) {
     return (
-      <div className="min-h-screen bg-primary flex items-center justify-center">
-        <div className="w-full max-w-md mx-4">
+      <div className="min-h-screen bg-muted flex items-center justify-center">
+        <div className="w-full max-w-sm mx-4">
+          {/* Brand */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white">Livret d&apos;accueil</h1>
-            <p className="text-blue-200 mt-1">de l&apos;apprenant</p>
-            <div className="w-20 h-1 bg-accent mx-auto mt-4"></div>
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground mb-4">
+              <BookOpen className="h-6 w-6" />
+            </div>
+            <h1 className="text-2xl font-bold text-foreground">Livrivia</h1>
+            <p className="text-muted-foreground text-sm mt-1">Livret d&apos;accueil de l&apos;apprenant</p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-xl p-8">
-            <h2 className="text-xl font-bold text-primary text-center mb-6">Connexion</h2>
+          {/* Login card */}
+          <div className="bg-card rounded-lg border border-border shadow-sm p-6">
+            <h2 className="text-lg font-semibold text-foreground text-center mb-6">Connexion</h2>
 
             {loginError && (
-              <div className="bg-red-50 text-red-600 border border-red-200 rounded px-4 py-2 mb-4 text-sm">
+              <div className="bg-destructive/10 text-destructive border border-destructive/20 rounded-md px-4 py-2.5 mb-4 text-sm">
                 {loginError}
               </div>
             )}
 
-            <form onSubmit={handleLogin}>
-              <div className="mb-4">
-                <label className="block text-sm font-bold text-primary mb-1">Email :</label>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">Email</label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   placeholder="admin@livret.local"
                   required
                 />
               </div>
 
-              <div className="mb-6">
-                <label className="block text-sm font-bold text-primary mb-1">Mot de passe :</label>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">Mot de passe</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   placeholder="Votre mot de passe"
                   required
                 />
@@ -130,39 +135,30 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
               <button
                 type="submit"
                 disabled={loginLoading}
-                className="w-full bg-primary hover:bg-blue-800 text-white font-bold py-3 rounded-lg transition-colors disabled:opacity-50"
+                className="w-full h-10 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
               >
+                {loginLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                 {loginLoading ? "Connexion..." : "Se connecter"}
               </button>
             </form>
           </div>
 
-          <p className="text-center text-blue-300 text-xs mt-6">Acces reserve - Veuillez vous identifier</p>
+          <p className="text-center text-muted-foreground text-xs mt-6">
+            Acces reserve — Veuillez vous identifier
+          </p>
         </div>
       </div>
     );
   }
 
-  // CONNECTE → Site complet avec sidebar + donnees etudiant
+  // Authenticated layout — single scrolling page, no sidebar
   return (
     <StudentProvider>
-      <div className="flex min-h-screen">
-        <Sidebar isAdmin={isAdmin} />
-        <div className="flex-1 flex flex-col">
-          {/* Barre du haut avec deconnexion */}
-          <div className="bg-white border-b border-gray-200 px-6 py-2.5 flex items-center justify-end gap-3 shrink-0">
-            <span className="text-xs text-gray-text">{userEmail}</span>
-            <button
-              onClick={handleLogout}
-              className="bg-red hover:bg-red/80 text-white text-xs font-medium px-3 py-1.5 rounded transition-colors"
-            >
-              Deconnexion
-            </button>
-          </div>
-          <main className="flex-1 p-6 lg:p-10 overflow-y-auto pb-20">
-            {children}
-          </main>
-        </div>
+      <div className="min-h-screen bg-muted">
+        <Header userEmail={userEmail} isAdmin={isAdmin} onLogout={handleLogout} />
+        <main className="mx-auto max-w-4xl px-4 py-6 md:px-6 md:py-8">
+          {children}
+        </main>
       </div>
     </StudentProvider>
   );

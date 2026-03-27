@@ -2,146 +2,191 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { sections } from "@/lib/sections";
-import { useState } from "react";
+import { cn } from "@/lib/cn";
+import {
+  HandHeart,
+  UserRound,
+  FileText,
+  GraduationCap,
+  Handshake,
+  Scale,
+  Award,
+  Accessibility,
+  CircleDollarSign,
+  Building2,
+  ShieldCheck,
+  Camera,
+  Lock,
+  ScrollText,
+  FolderOpen,
+  Users,
+  Link as LinkIcon,
+  PenTool,
+  Download,
+  Settings,
+  BookOpen,
+  type LucideIcon,
+} from "lucide-react";
+
+const iconMap: Record<string, LucideIcon> = {
+  HandHeart, UserRound, FileText, GraduationCap, Handshake, Scale, Award,
+  Accessibility, CircleDollarSign, Building2, ShieldCheck, Camera, Lock,
+  ScrollText, FolderOpen, Users, Link: LinkIcon, PenTool,
+};
+
+function scrollTo(id: string) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
 export default function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
 
   return (
-    <>
-      {/* Mobile toggle */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="lg:hidden fixed top-4 left-4 z-50 bg-primary text-white p-2 rounded-md shadow-lg"
-        aria-label="Menu"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {open ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          )}
-        </svg>
-      </button>
-
-      {/* Overlay */}
-      {open && <div className="lg:hidden fixed inset-0 bg-black/40 z-30" onClick={() => setOpen(false)} />}
-
-      {/* Sidebar */}
-      <aside className={`
-        fixed top-0 left-0 h-full w-72 bg-white border-r border-gray-200 z-40 overflow-y-auto
-        transform transition-transform duration-200
-        ${open ? "translate-x-0" : "-translate-x-full"}
-        lg:translate-x-0 lg:static lg:shrink-0
-      `}>
-        {/* Header */}
-        <Link href="/" onClick={() => setOpen(false)}>
-          <div className="bg-primary text-white p-5">
-            <h2 className="font-bold text-lg leading-tight">Livret d&apos;accueil</h2>
-            <p className="text-sm text-blue-200 mt-1">de l&apos;apprenant</p>
-          </div>
+    <aside className="hidden w-64 shrink-0 border-r border-sidebar-border bg-sidebar md:flex md:flex-col">
+      {/* Logo */}
+      <div className="flex h-14 items-center border-b border-sidebar-border px-4">
+        <Link href="/" className="flex items-center gap-2">
+          <BookOpen className="h-6 w-6 text-primary" />
+          <span className="text-lg font-semibold text-sidebar-foreground">Livrivia</span>
         </Link>
+      </div>
 
-        {/* Navigation */}
-        <nav className="p-3">
-          {/* Accueil */}
-          <Link
-            href="/"
-            onClick={() => setOpen(false)}
-            className={`
-              flex items-center gap-3 px-3 py-2 rounded-md text-sm mb-1 transition-colors
-              ${pathname === "/"
-                ? "bg-accent text-dark font-semibold"
-                : "text-dark hover:bg-light-gold hover:text-accent"
-              }
-            `}
-          >
-            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0
-              ${pathname === "/" ? "bg-dark text-accent" : "bg-light-gold text-accent"}`}>
-              ~
-            </span>
-            <span className="truncate font-medium">Accueil</span>
-          </Link>
+      {/* Navigation */}
+      <nav className="flex-1 overflow-y-auto p-3">
+        {/* Sections label */}
+        <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-sidebar-muted">
+          Sommaire
+        </p>
 
-          <div className="border-b border-gray-200 my-2"></div>
-
+        {/* Section scroll links */}
+        <ul className="space-y-0.5">
           {sections.map((s) => {
-            const href = `/${s.id}`;
-            const isActive = pathname === href;
+            const Icon = iconMap[s.icon] || FileText;
             return (
-              <Link
-                key={s.id}
-                href={href}
-                onClick={() => setOpen(false)}
-                className={`
-                  flex items-center gap-3 px-3 py-2 rounded-md text-sm mb-0.5 transition-colors
-                  ${isActive
-                    ? "bg-primary text-white font-semibold"
-                    : "text-dark hover:bg-light hover:text-primary"
-                  }
-                `}
-              >
-                <span className={`
-                  w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0
-                  ${isActive ? "bg-accent text-dark" : "bg-light-gray text-gray-text"}
-                `}>
-                  {s.num}
-                </span>
-                <span className="truncate">{s.shortTitle}</span>
-              </Link>
+              <li key={s.id}>
+                <button
+                  onClick={() => scrollTo(s.id)}
+                  className="w-full flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground text-sidebar-muted text-left"
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span className="truncate">{s.shortTitle}</span>
+                </button>
+              </li>
             );
           })}
+        </ul>
 
-          <div className="border-b border-gray-200 my-2"></div>
+        {/* Separator */}
+        <div className="my-4 h-px bg-sidebar-border" />
 
-          {/* Generer PDF */}
-          <Link
-            href="/generer-pdf"
-            onClick={() => setOpen(false)}
-            className={`
-              flex items-center gap-3 px-3 py-2.5 rounded-md text-sm mb-1 transition-colors
-              ${pathname === "/generer-pdf"
-                ? "bg-green text-white font-semibold"
-                : "bg-green/10 text-green hover:bg-green/20 font-semibold"
-              }
-            `}
-          >
-            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0
-              ${pathname === "/generer-pdf" ? "bg-white text-green" : "bg-green text-white"}`}>
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </span>
-            <span className="truncate">Generer mon livret</span>
-          </Link>
+        {/* PDF export */}
+        <ul className="space-y-1">
+          <li>
+            <Link
+              href="/generer-pdf"
+              className={cn(
+                "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                pathname === "/generer-pdf" ? "bg-sidebar-accent text-sidebar-foreground" : "text-sidebar-muted"
+              )}
+            >
+              <Download className="h-4 w-4" />
+              Exporter PDF
+            </Link>
+          </li>
+        </ul>
 
-          {isAdmin && (
-            <>
-              <div className="border-b border-gray-200 my-2"></div>
+        {/* Admin section */}
+        {isAdmin && (
+          <>
+            <div className="my-4 h-px bg-sidebar-border" />
+            <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-sidebar-muted">
+              Administration
+            </p>
+            <ul className="space-y-1">
+              <li>
+                <Link
+                  href="/admin"
+                  className={cn(
+                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                    pathname.startsWith("/admin") ? "bg-sidebar-accent text-sidebar-foreground" : "text-sidebar-muted"
+                  )}
+                >
+                  <Settings className="h-4 w-4" />
+                  Gestion apprenants
+                </Link>
+              </li>
+            </ul>
+          </>
+        )}
+      </nav>
+    </aside>
+  );
+}
 
-              {/* Admin */}
-              <Link
-                href="/admin"
-                onClick={() => setOpen(false)}
-                className={`
-                  flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors
-                  ${pathname.startsWith("/admin")
-                    ? "bg-secondary text-white font-semibold"
-                    : "text-gray-text hover:bg-light hover:text-secondary"
-                  }
-                `}
+/* ======= Mobile sidebar ======= */
+export function MobileSidebar({ isAdmin = false, onNavigate }: { isAdmin?: boolean; onNavigate?: () => void }) {
+  const pathname = usePathname();
+
+  function handleScrollTo(id: string) {
+    onNavigate?.();
+    setTimeout(() => scrollTo(id), 100);
+  }
+
+  return (
+    <nav className="flex-1 overflow-y-auto p-3">
+      <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-sidebar-muted">
+        Sommaire
+      </p>
+      <ul className="space-y-0.5">
+        {sections.map((s) => {
+          const Icon = iconMap[s.icon] || FileText;
+          return (
+            <li key={s.id}>
+              <button
+                onClick={() => handleScrollTo(s.id)}
+                className="w-full flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-sidebar-accent text-sidebar-muted text-left"
               >
-                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0
-                  ${pathname.startsWith("/admin") ? "bg-white text-secondary" : "bg-light-gray text-gray-text"}`}>
-                  A
-                </span>
-                <span className="truncate">Administration</span>
+                <Icon className="h-4 w-4 shrink-0" />
+                <span className="truncate">{s.shortTitle}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className="my-4 h-px bg-sidebar-border" />
+      <ul className="space-y-1">
+        <li>
+          <Link href="/generer-pdf" onClick={onNavigate}
+            className={cn(
+              "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-sidebar-accent",
+              pathname === "/generer-pdf" ? "bg-sidebar-accent text-sidebar-foreground" : "text-sidebar-muted"
+            )}>
+            <Download className="h-4 w-4" />
+            Exporter PDF
+          </Link>
+        </li>
+      </ul>
+
+      {isAdmin && (
+        <>
+          <div className="my-4 h-px bg-sidebar-border" />
+          <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-sidebar-muted">Administration</p>
+          <ul className="space-y-1">
+            <li>
+              <Link href="/admin" onClick={onNavigate}
+                className={cn(
+                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-sidebar-accent",
+                  pathname.startsWith("/admin") ? "bg-sidebar-accent text-sidebar-foreground" : "text-sidebar-muted"
+                )}>
+                <Settings className="h-4 w-4" />
+                Gestion apprenants
               </Link>
-            </>
-          )}
-        </nav>
-      </aside>
-    </>
+            </li>
+          </ul>
+        </>
+      )}
+    </nav>
   );
 }

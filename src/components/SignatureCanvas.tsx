@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
 import SignaturePad from "signature_pad";
+import { Check } from "lucide-react";
 
 interface SignatureCanvasProps {
   label: string;
@@ -9,7 +10,7 @@ interface SignatureCanvasProps {
   color?: string;
 }
 
-export default function SignatureCanvas({ label, value, onSave, color = "bg-primary" }: SignatureCanvasProps) {
+export default function SignatureCanvas({ label, value, onSave }: SignatureCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const padRef = useRef<SignaturePad | null>(null);
   const [saved, setSaved] = useState(false);
@@ -25,17 +26,14 @@ export default function SignatureCanvas({ label, value, onSave, color = "bg-prim
     if (ctx) ctx.scale(ratio, ratio);
 
     padRef.current = new SignaturePad(canvas, {
-      penColor: "#1C2833",
+      penColor: "#0a0a0a",
       backgroundColor: "rgb(255, 255, 255)",
     });
 
-    // Si une signature existe deja, l'afficher
     if (value) {
       const img = new Image();
       img.onload = () => {
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, canvas.offsetWidth, canvas.offsetHeight);
-        }
+        if (ctx) ctx.drawImage(img, 0, 0, canvas.offsetWidth, canvas.offsetHeight);
       };
       img.src = value;
     }
@@ -61,40 +59,37 @@ export default function SignatureCanvas({ label, value, onSave, color = "bg-prim
   }
 
   return (
-    <div className="mb-6">
-      <div className={`${color} text-white font-bold text-sm px-4 py-2.5 rounded-t`}>
+    <div className="rounded-md border border-border overflow-hidden">
+      <div className="bg-primary text-primary-foreground font-medium text-sm px-4 py-2.5">
         {label}
       </div>
-      <div className="border border-gray-200 border-t-0 rounded-b p-4 bg-white">
-        <p className="text-xs text-gray-500 mb-3">Signez dans le cadre ci-dessous avec votre souris ou votre doigt :</p>
+      <div className="p-4 bg-card">
+        <p className="text-xs text-muted-foreground mb-3">Signez dans le cadre ci-dessous :</p>
 
-        <div className="border-2 border-dashed border-gray-300 rounded-lg overflow-hidden mb-3">
+        <div className="border-2 border-dashed border-border rounded-md overflow-hidden mb-3">
           <canvas
             ref={canvasRef}
             className="w-full cursor-crosshair"
-            style={{ height: "160px", touchAction: "none" }}
+            style={{ height: "140px", touchAction: "none" }}
           />
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={handleClear}
-              className="px-4 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50 transition-colors"
-            >
+            <button type="button" onClick={handleClear}
+              className="inline-flex items-center rounded-md border border-input bg-background px-3 py-1.5 text-sm hover:bg-muted transition-colors">
               Effacer
             </button>
-            <button
-              type="button"
-              onClick={handleSave}
-              className={`px-4 py-1.5 text-sm text-white rounded transition-colors ${color} hover:opacity-80`}
-            >
-              Valider la signature
+            <button type="button" onClick={handleSave}
+              className="inline-flex items-center gap-1.5 rounded-md bg-primary text-primary-foreground px-3 py-1.5 text-sm hover:bg-primary/90 transition-colors">
+              Valider
             </button>
           </div>
           {saved && (
-            <span className="text-green-600 text-sm font-medium">Signature enregistree</span>
+            <span className="flex items-center gap-1 text-success text-sm font-medium">
+              <Check className="h-4 w-4" />
+              Enregistree
+            </span>
           )}
         </div>
       </div>
