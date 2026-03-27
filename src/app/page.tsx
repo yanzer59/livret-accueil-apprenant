@@ -1,7 +1,7 @@
 "use client";
 import { useStudent } from "@/lib/StudentContext";
 import { SectionBanner, InfoCard, AlertBox, TimelineStep, NumberedStep, DataTable, SignatureBlock } from "@/components/ui";
-import { SchemaTimeline, SchemaActeurs, SchemaCertification } from "@/components/schemas";
+import { SchemaActeurs, SchemaCertification } from "@/components/schemas";
 import SignatureCanvas from "@/components/SignatureCanvas";
 import SaveBar from "@/components/SaveBar";
 
@@ -240,27 +240,35 @@ export default function Home() {
         <p className="text-sm text-muted-foreground">
           Votre formation en alternance suit un parcours structure, articule entre periodes en centre de formation et periodes en entreprise.
         </p>
-        <SectionBanner title="LES ETAPES DE VOTRE PARCOURS" />
-        <TimelineStep num={1} title="Accueil et positionnement" description="Entretien individuel, evaluation des acquis, definition des objectifs personnalises et signature du contrat pedagogique." />
-        <TimelineStep num={2} title="Integration en entreprise" description="Decouverte de l'entreprise, presentation au tuteur / maitre d'apprentissage, prise de poste et premiers objectifs." />
-        <TimelineStep num={3} title="Formation en centre (CFA)" description="Acquisition des competences theoriques et pratiques conformement au referentiel du diplome ou titre vise." />
-        <TimelineStep num={4} title="Mise en pratique en entreprise" description="Application des connaissances acquises en centre, realisation de missions professionnelles et developpement de l'autonomie." />
-        <TimelineStep num={5} title="Suivi et evaluations continues" description="Evaluations en cours de formation (ECF), bilans reguliers avec le tuteur et le formateur referent." />
-        <TimelineStep num={6} title="Visites en entreprise" description="Rencontres entre le formateur referent et le tuteur pour evaluer la progression et ajuster le parcours si necessaire." />
-        <TimelineStep num={7} title="Preparation a la certification" description="Revisions, entrainements aux epreuves, constitution du dossier professionnel et preparation a l'examen final." />
-        <TimelineStep num={8} title="Certification et bilan final" description="Passage de l'examen, obtention du diplome ou titre professionnel, bilan de fin de parcours et perspectives." />
+        <SectionBanner title="LES 7 ETAPES DE VOTRE PARCOURS" />
+        <TimelineStep num={1} title="Attribution code d'acces plateforme e-learning" description="Vous recevez vos identifiants pour acceder a la plateforme de formation en ligne." />
+        <TimelineStep num={2} title="Prise de contact coach" description="Votre coach pedagogique vous contacte pour planifier votre accompagnement." />
+        <TimelineStep num={3} title="Attribution PC" description="Un ordinateur vous est fourni pour suivre votre formation dans les meilleures conditions." />
+        <TimelineStep num={4} title="Bilan milieu de formation" description="Point d'etape a mi-parcours pour evaluer votre progression et ajuster si necessaire." />
+        <TimelineStep num={5} title="Bilan de fin de formation" description="Bilan complet de vos acquis et preparation finale avant l'examen." />
+        <TimelineStep num={6} title="Passage de votre examen" description="Apres un an de preparation, vous etes pret, il est temps de passer votre examen !" />
+        <TimelineStep num={7} title="Resultats" description="Obtention de votre titre professionnel. En cas de non-obtention, session de rattrapage 3 mois apres." />
 
-        <SectionBanner title="CALENDRIER DES VISITES" />
+        <SectionBanner title="CALENDRIER DES 12 RENDEZ-VOUS DE SUIVI" />
         <DataTable
-          headers={["Visite", "Periode prevue", "Objectif", "Realise le"]}
+          headers={["RDV", "Objectif", "Realise le"]}
           rows={[
-            ["Visite 1", "1er trimestre", "Integration et adaptation au poste", ""],
-            ["Visite 2", "2e trimestre", "Suivi de progression et ajustements", ""],
-            ["Visite 3", "3e trimestre", "Bilan intermediaire des competences", ""],
-            ["Visite 4", "4e trimestre", "Preparation a la certification", ""],
+            ["1er", "Suivi coaching — Integration", ""],
+            ["2eme", "Suivi coaching", ""],
+            ["3eme", "Suivi coaching", ""],
+            ["4eme", "Bilan milieu de formation", ""],
+            ["5eme", "Suivi + constitution du Dossier Professionnel", ""],
+            ["6eme", "Suivi + constitution du Dossier Professionnel", ""],
+            ["7eme", "Suivi + constitution du Dossier Professionnel", ""],
+            ["8eme", "Suivi + constitution du Dossier Professionnel", ""],
+            ["9eme", "Suivi + constitution du Dossier Professionnel", ""],
+            ["10eme", "Suivi + constitution du Dossier Professionnel", ""],
+            ["11eme", "Suivi + preparation a l'examen", ""],
+            ["12eme", "Bilan de fin de formation", ""],
           ]}
         />
-        <SchemaTimeline />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/timeline-heol.png" alt="Votre annee de formation" className="w-full mt-4 rounded" />
       </Section>
 
       {/* ═══════════════════ 5. ENGAGEMENTS ═══════════════════ */}
@@ -517,7 +525,8 @@ export default function Home() {
         <p className="text-sm text-muted-foreground">
           La charte de l&apos;alternance rappelle l&apos;organisation du parcours et le role de chaque acteur.
         </p>
-        <SchemaTimeline />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/timeline-heol.png" alt="Votre annee de formation" className="w-full mb-4 rounded" />
         <SectionBanner title="LES ACTEURS DE VOTRE REUSSITE" />
         <InfoCard>
           <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
