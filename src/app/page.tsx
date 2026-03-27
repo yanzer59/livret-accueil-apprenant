@@ -520,8 +520,6 @@ export default function Home() {
         <p className="text-sm text-muted-foreground">
           La charte de l&apos;alternance rappelle l&apos;organisation du parcours et le role de chaque acteur.
         </p>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/timeline-heol.png" alt="Votre annee de formation" className="w-full mb-4 rounded" />
         <SectionBanner title="LES ACTEURS DE VOTRE REUSSITE" />
         <InfoCard>
           <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
